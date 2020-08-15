@@ -1,0 +1,3 @@
+[submodule "Plugins/HoudiniEngine"]
+	path = Plugins/HoudiniEngine
+	url = https://github.com/sideeffects/HoudiniEngineForUnreal-v2.git
