@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "HdnCharacter.generated.h"
 
+class UHdnSpectrumAnalyzer;
 UCLASS(config=Game)
 class AHdnCharacter : public ACharacter
 {
@@ -18,8 +19,13 @@ class AHdnCharacter : public ACharacter
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Gameplay", meta = (AllowPrivateAccess = "true"))
+	UHdnSpectrumAnalyzer* SpectrumAnalyzer;
+
 public:
 	AHdnCharacter();
+	virtual void BeginPlay() override;
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
@@ -58,12 +64,14 @@ protected:
 	/** Handler for when a touch input stops. */
 	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
 
-protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// End of APawn interface
 
+	void ChangeScannerFov() const;
+	FTimerHandle TimerTickHandle;
 public:
+	void TimerTick();
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/

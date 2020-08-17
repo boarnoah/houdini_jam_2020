@@ -1,6 +1,10 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "HdnCharacter.h"
+
+
+#include "DrawDebugHelpers.h"
+#include "HdnSpectrumAnalyzer.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -45,6 +49,14 @@ AHdnCharacter::AHdnCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+
+	SpectrumAnalyzer = CreateDefaultSubobject<UHdnSpectrumAnalyzer>(TEXT("Analyzer"));
+}
+
+void AHdnCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+	GetWorldTimerManager().SetTimer(TimerTickHandle, this, &AHdnCharacter::TimerTick, 0.5f, true, -1);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -76,6 +88,23 @@ void AHdnCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AHdnCharacter::OnResetVR);
 }
 
+
+void AHdnCharacter::ChangeScannerFov() const
+{
+	if (SpectrumAnalyzer->FovSetting == EScannerFov::Narrow)
+	{
+		SpectrumAnalyzer->FovSetting = EScannerFov::Wide;
+	} else
+	{
+		SpectrumAnalyzer->FovSetting = EScannerFov::Narrow;
+	}
+}
+
+void AHdnCharacter::TimerTick()
+{
+	SpectrumAnalyzer->Scan();
+	UE_LOG(LogTemp, Log, TEXT("Num Objectives Visible: %d"), SpectrumAnalyzer->VisibleObjectives.Num());
+}
 
 void AHdnCharacter::OnResetVR()
 {

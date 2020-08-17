@@ -14,7 +14,7 @@ AHdnFlag::AHdnFlag()
 }
 
 
-void AHdnFlag::SetObjectiveEnabled(const bool enabled)
+void AHdnFlag::SetObjectiveEnabled(bool enabled)
 {
 	ObjectiveEnabled = enabled;
 	Mesh->SetVisibility(enabled);
