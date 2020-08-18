@@ -1,9 +1,11 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "HdnCharacter.h"
+#include "HdnFlag.h"
 
 
 #include "DrawDebugHelpers.h"
+#include "HdnGameMode.h"
 #include "HdnSpectrumAnalyzer.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
@@ -104,6 +106,12 @@ void AHdnCharacter::TimerTick()
 {
 	SpectrumAnalyzer->Scan();
 	UE_LOG(LogTemp, Log, TEXT("Num Objectives Visible: %d"), SpectrumAnalyzer->VisibleObjectives.Num());
+}
+
+void AHdnCharacter::ActivatedObjective(AHdnFlag* objective) const
+{
+	auto Gm = Cast<AHdnGameMode>( GetWorld()->GetAuthGameMode());
+	Gm->ActivateObjective(objective);
 }
 
 void AHdnCharacter::OnResetVR()

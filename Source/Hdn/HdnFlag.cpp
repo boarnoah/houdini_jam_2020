@@ -2,6 +2,8 @@
 
 
 #include "HdnFlag.h"
+
+#include "HdnCharacter.h"
 #include "Components/StaticMeshComponent.h"
 
 // Sets default values
@@ -11,6 +13,13 @@ AHdnFlag::AHdnFlag()
 	PrimaryActorTick.bCanEverTick = false;
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	SetRootComponent(Mesh);
+
+	InteractZone = CreateDefaultSubobject<UBoxComponent>(TEXT("InteractZone"));
+	InteractZone->SetupAttachment(GetRootComponent());
+
+	InteractZone->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	InteractZone->SetCollisionResponseToAllChannels(ECR_Ignore);
+	InteractZone->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 }
 
 
@@ -18,6 +27,18 @@ void AHdnFlag::SetObjectiveEnabled(bool enabled)
 {
 	ObjectiveEnabled = enabled;
 	Mesh->SetVisibility(enabled);
+}
+
+void AHdnFlag::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	AHdnCharacter* player = Cast<AHdnCharacter>(OtherActor);
+
+	if (player && !ObjectiveActivated)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Player activated objective"));
+		ObjectiveActivated = true;
+		player->ActivatedObjective(this);
+	}
 }
 
 // Called when the game starts or when spawned

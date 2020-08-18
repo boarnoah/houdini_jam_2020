@@ -33,8 +33,20 @@ void AHdnGameMode::RegisterObjectiveManager(AHdnObjectiveManager* flagManager)
 	SpawnObjectives();
 }
 
+void AHdnGameMode::ActivateObjective(AHdnFlag* objective)
+{
+	AHdnGameState* GS = GetGameState<AHdnGameState>();
+	GS->NumActivatedObjectives++;
+
+	if (GS->NumActivatedObjectives == GS->NumObjectives)
+	{
+		UE_LOG(LogTemp, Log, TEXT("All objectives activated, time to leave"));
+	}
+}
+
 void AHdnGameMode::SpawnObjectives()
 {
+	AHdnGameState* GS = GetGameState<AHdnGameState>();
 	// We don't have enough obj positions to spawn requested number of Objs
 	if (ObjectiveManager->ObjectiveFlags.Num() < GS->NumObjectives)
 	{
@@ -42,8 +54,7 @@ void AHdnGameMode::SpawnObjectives()
 		return;
 	}
 
-	AHdnGameState* GS = GetGameState<AHdnGameState>();
-	int NumActivated = 0;
+	int NumEnabled = 0;
 
 	// Select a random set of flags to use for this session's objectives
 	do
@@ -56,7 +67,7 @@ void AHdnGameMode::SpawnObjectives()
 			GS->Objectives.Add(ObjectiveManager->ObjectiveFlags[RandIndex]);
 			NumEnabled++;
 		}
-	} while (NumActivated < NumObjectives);
+	} while (NumEnabled < GS->NumObjectives);
 
 	UE_LOG(LogTemp, Log, TEXT("Selected flags"));
 }

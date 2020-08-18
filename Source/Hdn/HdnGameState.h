@@ -18,4 +18,10 @@ class HDN_API AHdnGameState : public AGameStateBase
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Gameplay")
 	TArray<AHdnFlag*> Objectives;
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	int NumObjectives = 2;
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	int NumActivatedObjectives = 0;
 };

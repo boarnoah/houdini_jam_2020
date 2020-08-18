@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "HdnGameMode.generated.h"
 
+class AHdnFlag;
 class AHdnObjectiveManager;
 UCLASS(minimalapi)
 class AHdnGameMode : public AGameModeBase

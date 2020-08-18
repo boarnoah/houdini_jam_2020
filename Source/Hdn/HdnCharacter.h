@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "HdnCharacter.generated.h"
 
+class AHdnFlag;
 class UHdnSpectrumAnalyzer;
 UCLASS(config=Game)
 class AHdnCharacter : public ACharacter
@@ -35,6 +36,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
 
+	void ActivatedObjective(AHdnFlag* objective) const;
 protected:
 
 	/** Resets HMD orientation in VR. */
