@@ -38,6 +38,12 @@ void AHdnEscapeObjective::Tick(float DeltaTime)
 
 }
 
+void AHdnEscapeObjective::SetObjectiveEnabled(bool enabled)
+{
+	ObjectiveEnabled = enabled;
+	Mesh->SetVisibility(enabled);
+}
+
 void AHdnEscapeObjective::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	AHdnCharacter* player = Cast<AHdnCharacter>(OtherActor);

@@ -22,6 +22,11 @@ public:
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Gameplay")
 	bool ObjectiveActivated = false;
 
+	bool GetObjectiveEnabled() const { return ObjectiveEnabled; }
+	void SetObjectiveEnabled(bool enabled);
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Gameplay")
+	bool ObjectiveEnabled = false;
+
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 protected:
 	// Called when the game starts or when spawned

@@ -15,6 +15,8 @@ class AHdnGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 	void SpawnObjectives();
+	void SpawnEscape();
+	void EnableEscape() const;
 public:
 	AHdnGameMode();
 

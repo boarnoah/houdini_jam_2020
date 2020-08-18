@@ -26,12 +26,8 @@ void AHdnGameMode::RegisterObjectiveManager(AHdnObjectiveManager* flagManager)
 	UE_LOG(LogTemp, Log, TEXT("Registered flag manager"));
 	ObjectiveManager = flagManager;
 
-	for (AHdnFlag *Objective : ObjectiveManager->ObjectiveFlags)
-	{
-		Objective->SetObjectiveEnabled(false);
-	}
-	
 	SpawnObjectives();
+	SpawnEscape();
 }
 
 void AHdnGameMode::ActivateFlagObjective(AHdnFlag* objective)
@@ -43,6 +39,7 @@ void AHdnGameMode::ActivateFlagObjective(AHdnFlag* objective)
 	{
 		UE_LOG(LogTemp, Log, TEXT("All objectives activated, time to leave"));
 		GS->State = EGameObjectiveState::Escape;
+		EnableEscape();
 	}
 }
 
@@ -62,6 +59,11 @@ void AHdnGameMode::ActivateFeral(AHdnCharacter* player)
 
 void AHdnGameMode::SpawnObjectives()
 {
+	for (AHdnFlag *Objective : ObjectiveManager->ObjectiveFlags)
+	{
+		Objective->SetObjectiveEnabled(false);
+	}
+
 	AHdnGameState* GS = GetGameState<AHdnGameState>();
 	// We don't have enough obj positions to spawn requested number of Objs
 	if (ObjectiveManager->ObjectiveFlags.Num() < GS->NumObjectives)
@@ -86,5 +88,31 @@ void AHdnGameMode::SpawnObjectives()
 	} while (NumEnabled < GS->NumObjectives);
 
 	UE_LOG(LogTemp, Log, TEXT("Selected flags"));
+}
+
+void AHdnGameMode::SpawnEscape()
+{
+	for (AHdnEscapeObjective* Objective : ObjectiveManager->ObjectiveEscapes)
+	{
+		Objective->SetObjectiveEnabled(false);
+	}
+
+	AHdnGameState* GS = GetGameState<AHdnGameState>();
+
+	// We don't have enough escape positions added to spawn escape locations
+	if (ObjectiveManager->ObjectiveEscapes.Num() < 1)
+	{
+		UE_LOG(LogTemp, Error, TEXT("No escape objectives placed to put escape at"));
+		return;
+	}
+
+	const int RandIndex = FMath::RandRange(0, ObjectiveManager->ObjectiveEscapes.Num() - 1);
+	GS->EscapeObjective = ObjectiveManager->ObjectiveEscapes[RandIndex];
+}
+
+void AHdnGameMode::EnableEscape() const
+{
+	AHdnGameState* GS = GetGameState<AHdnGameState>();
+	GS->EscapeObjective->SetObjectiveEnabled(true);
 }
 

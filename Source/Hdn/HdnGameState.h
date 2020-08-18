@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "EGameObjectiveState.h"
+#include "HdnEscapeObjective.h"
 #include "GameFramework/GameStateBase.h"
 #include "HdnGameState.generated.h"
 
@@ -19,6 +20,9 @@ class HDN_API AHdnGameState : public AGameStateBase
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Gameplay")
 	TArray<AHdnFlag*> Objectives;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Gameplay")
+	AHdnEscapeObjective* EscapeObjective;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	int NumObjectives = 2;
