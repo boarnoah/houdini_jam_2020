@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "HdnGameMode.generated.h"
 
+class AHdnCharacter;
 class AHdnEscapeObjective;
 class AHdnFlag;
 class AHdnObjectiveManager;
@@ -23,6 +24,7 @@ public:
 	void RegisterObjectiveManager(AHdnObjectiveManager* flagManager);
 	void ActivateFlagObjective(AHdnFlag* objective);
 	void ActivateEscapeObjective(AHdnEscapeObjective* objective);
+	void ActivateFeral(AHdnCharacter* player);
 };
 
 

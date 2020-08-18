@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "HdnCharacter.generated.h"
 
+class UHdnStress;
 class AHdnEscapeObjective;
 class AHdnFlag;
 class UHdnSpectrumAnalyzer;
@@ -25,6 +26,8 @@ class AHdnCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Gameplay", meta = (AllowPrivateAccess = "true"))
 	UHdnSpectrumAnalyzer* SpectrumAnalyzer;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Gameplay", meta = (AllowPrivateAccess = "true"))
+	UHdnStress* Stress;
 public:
 	AHdnCharacter();
 	virtual void BeginPlay() override;
@@ -39,6 +42,8 @@ public:
 
 	void ActivatedObjective(AHdnFlag* objective) const;
 	void ActivatedEscape(AHdnEscapeObjective* objective) const;
+
+	void ActivateFeral();
 protected:
 
 	/** Resets HMD orientation in VR. */

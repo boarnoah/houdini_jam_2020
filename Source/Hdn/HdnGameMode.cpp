@@ -49,8 +49,15 @@ void AHdnGameMode::ActivateFlagObjective(AHdnFlag* objective)
 void AHdnGameMode::ActivateEscapeObjective(AHdnEscapeObjective* objective)
 {
 	AHdnGameState* GS = GetGameState<AHdnGameState>();
-	UE_LOG(LogTemp, Log, TEXT("Successfully escaped, game over"));
+	UE_LOG(LogTemp, Log, TEXT("Successfully escaped, game won"));
 	GS->State = EGameObjectiveState::Win;
+}
+
+void AHdnGameMode::ActivateFeral(AHdnCharacter* player)
+{
+	AHdnGameState* GS = GetGameState<AHdnGameState>();
+	UE_LOG(LogTemp, Log, TEXT("Mouse gone feral, you've lost control, game over"));
+	GS->State = EGameObjectiveState::Lose;
 }
 
 void AHdnGameMode::SpawnObjectives()

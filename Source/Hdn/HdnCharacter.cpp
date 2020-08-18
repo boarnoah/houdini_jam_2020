@@ -8,6 +8,7 @@
 #include "HdnEscapeObjective.h"
 #include "HdnGameMode.h"
 #include "HdnSpectrumAnalyzer.h"
+#include "HdnStress.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -54,6 +55,7 @@ AHdnCharacter::AHdnCharacter()
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 
 	SpectrumAnalyzer = CreateDefaultSubobject<UHdnSpectrumAnalyzer>(TEXT("Analyzer"));
+	Stress = CreateDefaultSubobject<UHdnStress>(TEXT("Stress"));
 }
 
 void AHdnCharacter::BeginPlay()
@@ -101,6 +103,13 @@ void AHdnCharacter::ChangeScannerFov() const
 	{
 		SpectrumAnalyzer->FovSetting = EScannerFov::Narrow;
 	}
+}
+
+// TODO: Allow for recovery from feral with a QTE / Button Mash that gets increasingly harder the more this happens
+void AHdnCharacter::ActivateFeral()
+{
+	auto Gm = Cast<AHdnGameMode>( GetWorld()->GetAuthGameMode());
+	Gm->ActivateFeral(this);
 }
 
 void AHdnCharacter::TimerTick()
