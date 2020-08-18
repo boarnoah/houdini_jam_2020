@@ -6,7 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "HdnGameMode.generated.h"
 
-class AHdnFlagManager;
+class AHdnObjectiveManager;
 UCLASS(minimalapi)
 class AHdnGameMode : public AGameModeBase
 {
@@ -16,12 +16,10 @@ public:
 	AHdnGameMode();
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	AHdnFlagManager* FlagManager;
+	AHdnObjectiveManager* ObjectiveManager;
 
-	void RegisterFlagManager(AHdnFlagManager* flagManager);
-
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	int NumObjectives = 2;
+	void RegisterObjectiveManager(AHdnObjectiveManager* flagManager);
+	void ActivateObjective(AHdnFlag* objective);
 };
 
 

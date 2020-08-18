@@ -4,17 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "HdnFlagManager.generated.h"
+#include "HdnObjectiveManager.generated.h"
 
 class AHdnFlag;
 UCLASS()
-class HDN_API AHdnFlagManager : public AActor
+class HDN_API AHdnObjectiveManager : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AHdnFlagManager();
+	AHdnObjectiveManager();
 	UPROPERTY(BlueprintReadWrite, EditInstanceOnly)
 	TArray<AHdnFlag*> ObjectiveFlags;
 protected:

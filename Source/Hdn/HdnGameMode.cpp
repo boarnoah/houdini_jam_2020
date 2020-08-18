@@ -4,7 +4,7 @@
 
 
 #include "HdnFlag.h"
-#include "HdnFlagManager.h"
+#include "HdnObjectiveManager.h"
 #include "HdnGameState.h"
 #include "UObject/ConstructorHelpers.h"
 
@@ -20,12 +20,12 @@ AHdnGameMode::AHdnGameMode()
 	GameStateClass = AHdnGameState::StaticClass();
 }
 
-void AHdnGameMode::RegisterFlagManager(AHdnFlagManager* flagManager)
+void AHdnGameMode::RegisterObjectiveManager(AHdnObjectiveManager* flagManager)
 {
 	UE_LOG(LogTemp, Log, TEXT("Registered flag manager"));
-	FlagManager = flagManager;
+	ObjectiveManager = flagManager;
 
-	for (AHdnFlag *Objective : FlagManager->ObjectiveFlags)
+	for (AHdnFlag *Objective : ObjectiveManager->ObjectiveFlags)
 	{
 		Objective->SetObjectiveEnabled(false);
 	}
@@ -36,7 +36,7 @@ void AHdnGameMode::RegisterFlagManager(AHdnFlagManager* flagManager)
 void AHdnGameMode::SpawnObjectives()
 {
 	// We don't have enough obj positions to spawn requested number of Objs
-	if (FlagManager->ObjectiveFlags.Num() < NumObjectives)
+	if (ObjectiveManager->ObjectiveFlags.Num() < GS->NumObjectives)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Not enough Objective Flags to spawn Required Num Objectives"));
 		return;
@@ -48,13 +48,13 @@ void AHdnGameMode::SpawnObjectives()
 	// Select a random set of flags to use for this session's objectives
 	do
 	{
-		const int RandIndex = FMath::RandRange(0, FlagManager->ObjectiveFlags.Num() - 1);
+		const int RandIndex = FMath::RandRange(0, ObjectiveManager->ObjectiveFlags.Num() - 1);
 
-		if (!FlagManager->ObjectiveFlags[RandIndex]->GetObjectiveEnabled())
+		if (!ObjectiveManager->ObjectiveFlags[RandIndex]->GetObjectiveEnabled())
 		{
-			FlagManager->ObjectiveFlags[RandIndex]->SetObjectiveEnabled(true);
-			GS->Objectives.Add(FlagManager->ObjectiveFlags[RandIndex]);
-			NumActivated++;
+			ObjectiveManager->ObjectiveFlags[RandIndex]->SetObjectiveEnabled(true);
+			GS->Objectives.Add(ObjectiveManager->ObjectiveFlags[RandIndex]);
+			NumEnabled++;
 		}
 	} while (NumActivated < NumObjectives);
 
