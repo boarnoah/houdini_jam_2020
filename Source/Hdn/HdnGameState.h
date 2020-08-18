@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "EGameObjectiveState.h"
 #include "GameFramework/GameStateBase.h"
 #include "HdnGameState.generated.h"
 
@@ -24,4 +25,7 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	int NumActivatedObjectives = 0;
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	EGameObjectiveState State = EGameObjectiveState::Collection;
 };

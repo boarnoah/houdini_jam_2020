@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "HdnGameMode.generated.h"
 
+class AHdnEscapeObjective;
 class AHdnFlag;
 class AHdnObjectiveManager;
 UCLASS(minimalapi)
@@ -20,7 +21,8 @@ public:
 	AHdnObjectiveManager* ObjectiveManager;
 
 	void RegisterObjectiveManager(AHdnObjectiveManager* flagManager);
-	void ActivateObjective(AHdnFlag* objective);
+	void ActivateFlagObjective(AHdnFlag* objective);
+	void ActivateEscapeObjective(AHdnEscapeObjective* objective);
 };
 
 

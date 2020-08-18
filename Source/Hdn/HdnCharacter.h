@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "HdnCharacter.generated.h"
 
+class AHdnEscapeObjective;
 class AHdnFlag;
 class UHdnSpectrumAnalyzer;
 UCLASS(config=Game)
@@ -37,6 +38,7 @@ public:
 	float BaseLookUpRate;
 
 	void ActivatedObjective(AHdnFlag* objective) const;
+	void ActivatedEscape(AHdnEscapeObjective* objective) const;
 protected:
 
 	/** Resets HMD orientation in VR. */

@@ -3,6 +3,7 @@
 #include "HdnGameMode.h"
 
 
+#include "HdnEscapeObjective.h"
 #include "HdnFlag.h"
 #include "HdnObjectiveManager.h"
 #include "HdnGameState.h"
@@ -33,7 +34,7 @@ void AHdnGameMode::RegisterObjectiveManager(AHdnObjectiveManager* flagManager)
 	SpawnObjectives();
 }
 
-void AHdnGameMode::ActivateObjective(AHdnFlag* objective)
+void AHdnGameMode::ActivateFlagObjective(AHdnFlag* objective)
 {
 	AHdnGameState* GS = GetGameState<AHdnGameState>();
 	GS->NumActivatedObjectives++;
@@ -41,7 +42,15 @@ void AHdnGameMode::ActivateObjective(AHdnFlag* objective)
 	if (GS->NumActivatedObjectives == GS->NumObjectives)
 	{
 		UE_LOG(LogTemp, Log, TEXT("All objectives activated, time to leave"));
+		GS->State = EGameObjectiveState::Escape;
 	}
+}
+
+void AHdnGameMode::ActivateEscapeObjective(AHdnEscapeObjective* objective)
+{
+	AHdnGameState* GS = GetGameState<AHdnGameState>();
+	UE_LOG(LogTemp, Log, TEXT("Successfully escaped, game over"));
+	GS->State = EGameObjectiveState::Win;
 }
 
 void AHdnGameMode::SpawnObjectives()

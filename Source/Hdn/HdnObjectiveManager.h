@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "HdnObjectiveManager.generated.h"
 
+class AHdnEscapeObjective;
 class AHdnFlag;
 UCLASS()
 class HDN_API AHdnObjectiveManager : public AActor
@@ -17,6 +18,9 @@ public:
 	AHdnObjectiveManager();
 	UPROPERTY(BlueprintReadWrite, EditInstanceOnly)
 	TArray<AHdnFlag*> ObjectiveFlags;
+
+	UPROPERTY(BlueprintReadWrite, EditInstanceOnly)
+	TArray<AHdnEscapeObjective*> ObjectiveEscapes;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

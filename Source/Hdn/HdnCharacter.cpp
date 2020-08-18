@@ -5,6 +5,7 @@
 
 
 #include "DrawDebugHelpers.h"
+#include "HdnEscapeObjective.h"
 #include "HdnGameMode.h"
 #include "HdnSpectrumAnalyzer.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
@@ -111,7 +112,13 @@ void AHdnCharacter::TimerTick()
 void AHdnCharacter::ActivatedObjective(AHdnFlag* objective) const
 {
 	auto Gm = Cast<AHdnGameMode>( GetWorld()->GetAuthGameMode());
-	Gm->ActivateObjective(objective);
+	Gm->ActivateFlagObjective(objective);
+}
+
+void AHdnCharacter::ActivatedEscape(AHdnEscapeObjective* objective) const
+{
+	auto Gm = Cast<AHdnGameMode>( GetWorld()->GetAuthGameMode());
+	Gm->ActivateEscapeObjective(objective);
 }
 
 void AHdnCharacter::OnResetVR()
