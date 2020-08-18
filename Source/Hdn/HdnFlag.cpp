@@ -27,13 +27,21 @@ void AHdnFlag::SetObjectiveEnabled(bool enabled)
 {
 	ObjectiveEnabled = enabled;
 	Mesh->SetVisibility(enabled);
+
+	if (enabled)
+	{
+		Mesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	} else
+	{
+		Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
 }
 
 void AHdnFlag::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	AHdnCharacter* player = Cast<AHdnCharacter>(OtherActor);
 
-	if (player && !ObjectiveActivated)
+	if (player && ObjectiveEnabled && !ObjectiveActivated)
 	{
 		UE_LOG(LogTemp, Log, TEXT("Player activated objective"));
 		ObjectiveActivated = true;

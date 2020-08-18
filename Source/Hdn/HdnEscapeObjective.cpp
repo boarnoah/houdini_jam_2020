@@ -42,13 +42,21 @@ void AHdnEscapeObjective::SetObjectiveEnabled(bool enabled)
 {
 	ObjectiveEnabled = enabled;
 	Mesh->SetVisibility(enabled);
+
+	if (enabled)
+	{
+		Mesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	} else
+	{
+		Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
 }
 
 void AHdnEscapeObjective::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	AHdnCharacter* player = Cast<AHdnCharacter>(OtherActor);
 
-	if (player && !ObjectiveActivated)
+	if (player && ObjectiveEnabled && !ObjectiveActivated)
 	{
 		const auto GS = GetWorld()->GetAuthGameMode<AHdnGameMode>()->GetGameState<AHdnGameState>();
 
