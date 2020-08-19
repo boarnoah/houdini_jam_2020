@@ -22,6 +22,15 @@ protected:
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Gameplay")
 	TArray<AHdnPatrol*> Patrols;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Gameplay")
+	float EnemyPatrolActivateDistance = 50000.0f;
+
+	FTimerHandle TimerTickHandle;
+	void TimerTick();
+
+	UPROPERTY()
+	ACharacter* PlayerCharacter;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

@@ -16,13 +16,20 @@ AHdnPatrol::AHdnPatrol()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	SpawnBox = CreateDefaultSubobject<UBoxComponent>(TEXT("SpawnBox"));
-	SpawnBox->SetBoxExtent(FVector(1200, 1200, 300));
+	SpawnBox->SetBoxExtent(FVector(1200, 1200, 200));
 	SetRootComponent(SpawnBox);
 }
 
 void AHdnPatrol::SetPatrolEnabled(bool status)
 {
 	Enabled = status;
+
+	if (Enabled && FirstEnable)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Patrol first time activation, spawning enemies"));
+		FirstEnable = false;
+		SpawnEnemies();
+	}
 
 	for (auto Gunship : Gunships)
 	{
@@ -69,7 +76,7 @@ void AHdnPatrol::SpawnEnemies()
 		for(int i = 0; i < numGunshipsToSpawn; i++)
 		{
 			FVector spawnPoint = UKismetMathLibrary::RandomPointInBoundingBox(SpawnBox->GetComponentLocation(), SpawnBox->GetScaledBoxExtent());
-			AHdnEGunship* gunship = GetWorld()->SpawnActor<AHdnEGunship>(GunshipClass, spawnPoint, FRotator(), ActorSpawnParams);
+			AHdnEGunship* gunship = GetWorld()->SpawnActor<AHdnEGunship>(GunshipClass, spawnPoint, FRotator(0, 0, 0), ActorSpawnParams);
 			Gunships.Add(gunship);
 		}
 	}
@@ -81,7 +88,7 @@ void AHdnPatrol::SpawnEnemies()
 		for(int i = 0; i < numScoutsToSpawn; i++)
 		{
 			FVector spawnPoint = UKismetMathLibrary::RandomPointInBoundingBox(SpawnBox->GetComponentLocation(), SpawnBox->GetScaledBoxExtent());
-			AHdnEScout* scout = GetWorld()->SpawnActor<AHdnEScout>(ScoutClass, spawnPoint, FRotator(), ActorSpawnParams);
+			AHdnEScout* scout = GetWorld()->SpawnActor<AHdnEScout>(ScoutClass, spawnPoint, FRotator(0, 0, 0), ActorSpawnParams);
 			Scouts.Add(scout);
 		}
 	}

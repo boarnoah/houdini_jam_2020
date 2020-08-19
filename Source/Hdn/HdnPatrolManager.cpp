@@ -2,7 +2,11 @@
 
 
 #include "HdnPatrolManager.h"
+
+#include "HdnGameMode.h"
 #include "HdnPatrol.h"
+#include "GameFramework/Character.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AHdnPatrolManager::AHdnPatrolManager()
@@ -21,6 +25,25 @@ void AHdnPatrolManager::RegisterPatrol(AHdnPatrol* patrol)
 void AHdnPatrolManager::BeginPlay()
 {
 	Super::BeginPlay();
+	auto Gm = Cast<AHdnGameMode>( GetWorld()->GetAuthGameMode());
+	Gm->RegisterPatrolManager(this);
+	PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	GetWorldTimerManager().SetTimer(TimerTickHandle, this, &AHdnPatrolManager::TimerTick, 1.0f, true, -1);
+	UE_LOG(LogTemp, Log, TEXT("Started patrol Manager"));
+}
+
+void AHdnPatrolManager::TimerTick()
+{
+	const FVector playerLocation = PlayerCharacter->GetActorLocation();
+	for (AHdnPatrol* patrol : Patrols)
+	{
+		float distanceToPlayer =  FVector::Dist(playerLocation, patrol->GetActorLocation());
+
+		if (distanceToPlayer <= EnemyPatrolActivateDistance)
+		{
+			patrol->SetPatrolEnabled(true);
+		}
+	}
 }
 
 // Called every frame

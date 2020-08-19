@@ -56,6 +56,8 @@ protected:
 	void SpawnEnemies();
 
 	static void ToggleEnemyActive(AActor* enemy, bool newState);
+
+	bool FirstEnable = true;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
