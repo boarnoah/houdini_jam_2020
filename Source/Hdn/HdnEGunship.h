@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "EEnemyState.h"
 #include "GameFramework/Character.h"
 
 #include "HdnEGunship.generated.h"
@@ -23,6 +24,46 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Gameplay")
 	UPawnSensingComponent* PawnSensing;
+
+	UFUNCTION()
+	void OnPlayerSeen(APawn* Pawn);
+
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Gameplay")
+	float AlertedTime = 5.0f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Gameplay")
+	float AlertGracePeriod = 3.0f;
+	bool InAlertGracePeriod = false;
+
+	FTimerHandle AlertGraceHandle;
+	void OnAlertGracePeriodExpired();
+
+	// Player total alert duration
+	FTimerHandle AlertHandle;
+	void OnAlertExpired();
+
+	void LookAtAlert();
+	void InvestigateAlert();
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Gameplay")
+	EEnemyState State = EEnemyState::Patrol;
+
+	UPROPERTY()
+	FVector LastSeenPosition;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Gameplay")
+	float WeaponCooldown = 5.0f;
+
+	FTimerHandle WeaponCooldownHandle;
+	void OnWeaponCoolDown();
+ 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Gameplay")
+	float CombatCooldown = 10.0f;
+
+	FTimerHandle CombatCooldownHandle;
+	void OnCombatCooldown();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;  
