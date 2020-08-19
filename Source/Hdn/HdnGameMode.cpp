@@ -6,6 +6,7 @@
 #include "HdnEscapeObjective.h"
 #include "HdnFlag.h"
 #include "HdnObjectiveManager.h"
+#include "HdnPatrolManager.h"
 #include "HdnGameState.h"
 #include "UObject/ConstructorHelpers.h"
 
@@ -28,6 +29,12 @@ void AHdnGameMode::RegisterObjectiveManager(AHdnObjectiveManager* flagManager)
 
 	SpawnObjectives();
 	SpawnEscape();
+}
+
+void AHdnGameMode::RegisterPatrolManager(AHdnPatrolManager* patrolManager)
+{
+	UE_LOG(LogTemp, Log, TEXT("Registered patrol manager"));
+	PatrolManager = patrolManager;
 }
 
 void AHdnGameMode::ActivateFlagObjective(AHdnFlag* objective)

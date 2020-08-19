@@ -115,7 +115,7 @@ void AHdnCharacter::ActivateFeral()
 void AHdnCharacter::TimerTick()
 {
 	SpectrumAnalyzer->Scan();
-	UE_LOG(LogTemp, Log, TEXT("Num Objectives Visible: %d"), SpectrumAnalyzer->VisibleObjectives.Num());
+	// UE_LOG(LogTemp, Log, TEXT("Num Objectives Visible: %d"), SpectrumAnalyzer->VisibleObjectives.Num());
 }
 
 void AHdnCharacter::ActivatedObjective(AHdnFlag* objective) const

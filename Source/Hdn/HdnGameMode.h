@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "HdnGameMode.generated.h"
 
+class AHdnPatrolManager;
 class AHdnCharacter;
 class AHdnEscapeObjective;
 class AHdnFlag;
@@ -22,8 +23,11 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	AHdnObjectiveManager* ObjectiveManager;
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	AHdnPatrolManager* PatrolManager;
 
 	void RegisterObjectiveManager(AHdnObjectiveManager* flagManager);
+	void RegisterPatrolManager(AHdnPatrolManager* patrolManager);
 	void ActivateFlagObjective(AHdnFlag* objective);
 	void ActivateEscapeObjective(AHdnEscapeObjective* objective);
 	void ActivateFeral(AHdnCharacter* player);
