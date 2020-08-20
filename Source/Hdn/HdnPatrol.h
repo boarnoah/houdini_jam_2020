@@ -22,15 +22,14 @@ public:
 	void SetPatrolEnabled(bool status);
 	bool GetPatrolEnabled()  const { return Enabled; }
 
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Gameplay")
+	TArray<ATargetPoint*> PatrolPoints;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Gameplay")
 	UBoxComponent* SpawnBox;
-
-	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Gameplay")
-	TArray<ATargetPoint*> PatrolPoints;
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Gameplay")
 	bool Enabled = false;

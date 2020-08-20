@@ -6,8 +6,10 @@
 
 #include "DrawDebugHelpers.h"
 #include "HdnCharacter.h"
+#include "HdnPatrol.h"
+#include "Blueprint/AIBlueprintHelperLibrary.h"
+#include "Engine/TargetPoint.h"
 #include "Perception/PawnSensingComponent.h"
-
 // Sets default values
 AHdnEGunship::AHdnEGunship()
 {
@@ -24,6 +26,7 @@ AHdnEGunship::AHdnEGunship()
 void AHdnEGunship::BeginPlay()
 {
 	Super::BeginPlay();
+	ResumePatrol();
 }
 
 
@@ -43,6 +46,7 @@ void AHdnEGunship::OnPlayerSeen(APawn* Pawn)
 			DrawDebugSphere(GetWorld(), Pawn->GetActorLocation(), 15.0f, 12, FColor::Yellow, false, 1.0f);
 
 			State = EEnemyState::Alerted;
+			GetController()->StopMovement();
 			InAlertGracePeriod = true;
 			GetWorldTimerManager().SetTimer(AlertHandle, this, &AHdnEGunship::OnAlertExpired, AlertedTime, false, -1);
 			GetWorldTimerManager().SetTimer(AlertGraceHandle, this, &AHdnEGunship::OnAlertGracePeriodExpired, AlertGracePeriod, false, -1);
@@ -78,6 +82,7 @@ void AHdnEGunship::OnAlertExpired()
 	{
 		UE_LOG(LogTemp, Log, TEXT("Alert over back to patrol"));
 		State = EEnemyState::Patrol;
+		ResumePatrol();
 	}
 }
 
@@ -107,10 +112,35 @@ void AHdnEGunship::OnCombatCooldown()
 	GetWorldTimerManager().SetTimer(AlertHandle, this, &AHdnEGunship::OnAlertExpired, AlertedTime, false, -1);
 }
 
+void AHdnEGunship::SetNextWaypoint()
+{
+	if (CurrentWaypointIndex + 1 >= Patrol->PatrolPoints.Num())
+	{
+		CurrentWaypointIndex = 0;
+	}
+
+	CurrentWaypointIndex++;
+}
+
+void AHdnEGunship::ResumePatrol()
+{
+	CurrentDestination = Patrol->PatrolPoints[CurrentWaypointIndex]->GetActorLocation();
+	UAIBlueprintHelperLibrary::SimpleMoveToLocation(GetController(), CurrentDestination);
+}
+
 // Called every frame
 void AHdnEGunship::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	const FVector distance = CurrentDestination - GetActorLocation();
+
+	if (distance.Size() <= WaypointReachDistance) {
+		if (State == EEnemyState::Patrol)
+		{
+			SetNextWaypoint();
+			ResumePatrol();
+		}
+	}
 }
 
 // Called to bind functionality to input

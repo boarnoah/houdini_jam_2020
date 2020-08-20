@@ -65,10 +65,6 @@ void AHdnPatrol::BeginPlay()
 
 void AHdnPatrol::SpawnEnemies()
 {
-	FActorSpawnParameters ActorSpawnParams;
-	ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-	ActorSpawnParams.Owner = this;
-
 	if (Gunships.Num() < MaxGunships)
 	{
 		const int numGunshipsToSpawn = MaxGunships - Gunships.Num();
@@ -76,15 +72,32 @@ void AHdnPatrol::SpawnEnemies()
 		for(int i = 0; i < numGunshipsToSpawn; i++)
 		{
 			FVector spawnPoint = UKismetMathLibrary::RandomPointInBoundingBox(SpawnBox->GetComponentLocation(), SpawnBox->GetScaledBoxExtent());
-			AHdnEGunship* gunship = GetWorld()->SpawnActor<AHdnEGunship>(GunshipClass, spawnPoint, FRotator(0, 0, 0), ActorSpawnParams);
-			Gunships.Add(gunship);
+			FTransform spawnTransform = FTransform(FRotator(0, 0,  0), spawnPoint, FVector(1,1,1));
+			AHdnEGunship* gunship = GetWorld()->SpawnActorDeferred<AHdnEGunship>(GunshipClass, spawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding);
+
+			// Defer creation till we can set this safely
+			gunship->Patrol = this;
+
+			gunship = Cast<AHdnEGunship>(UGameplayStatics::FinishSpawningActor(gunship, spawnTransform));
+
+			if (gunship != nullptr)
+			{
+				Gunships.Add(gunship);
+			} else
+			{
+				UE_LOG(LogTemp, Error, TEXT("Gunship spawn failed"));
+			}
 		}
 	}
 
 	if (Scouts.Num() < MaxScouts)
 	{
-		const int numScoutsToSpawn = MaxScouts - Scouts.Num();
+		FActorSpawnParameters ActorSpawnParams;
+		ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+		ActorSpawnParams.Owner = this;
 
+		const int numScoutsToSpawn = MaxScouts - Scouts.Num();
+	
 		for(int i = 0; i < numScoutsToSpawn; i++)
 		{
 			FVector spawnPoint = UKismetMathLibrary::RandomPointInBoundingBox(SpawnBox->GetComponentLocation(), SpawnBox->GetScaledBoxExtent());

@@ -8,6 +8,7 @@
 
 #include "HdnEGunship.generated.h"
 
+class AHdnPatrol;
 class UPawnSensingComponent;
 UCLASS()
 class HDN_API AHdnEGunship : public ACharacter
@@ -64,7 +65,22 @@ protected:
 	FTimerHandle CombatCooldownHandle;
 	void OnCombatCooldown();
 
-public:	
+	UPROPERTY()
+	int CurrentWaypointIndex = 0;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Gameplay")
+	float WaypointReachDistance = 100.0f;
+
+	UPROPERTY()
+	FVector CurrentDestination;
+
+	void SetNextWaypoint();
+
+	void ResumePatrol();
+public:
+	UPROPERTY()
+	AHdnPatrol* Patrol;
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;  
 
