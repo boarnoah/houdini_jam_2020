@@ -49,7 +49,6 @@ void AHdnEGunship::OnPlayerSeen(APawn* Pawn)
 			DrawDebugSphere(GetWorld(), Pawn->GetActorLocation(), 15.0f, 12, FColor::Yellow, false, 1.0f);
 
 			State = EEnemyState::Alerted;
-			GetController()->StopMovement();
 			InAlertGracePeriod = true;
 			GetWorldTimerManager().SetTimer(AlertHandle, this, &AHdnEGunship::OnAlertExpired, AlertedTime, false, -1);
 			GetWorldTimerManager().SetTimer(AlertGraceHandle, this, &AHdnEGunship::OnAlertGracePeriodExpired, AlertGracePeriod, false, -1);
@@ -91,12 +90,18 @@ void AHdnEGunship::OnAlertExpired()
 
 void AHdnEGunship::LookAtAlert()
 {
-	UE_LOG(LogTemp, Log, TEXT("Looking at alert"));
+	GetController()->StopMovement();
 }
 
 void AHdnEGunship::InvestigateAlert()
 {
-	UE_LOG(LogTemp, Log, TEXT("Investigating alert"));
+	const auto playerDirection  = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), LastSeenPosition).GetNormalized();
+	const FVector distance = LastSeenPosition - GetActorLocation();
+	const FVector destination = GetActorLocation() + playerDirection.Vector() * (distance.Size() / 2);
+	CurrentDestination = GetPointOnNavMesh(destination);
+	UAIBlueprintHelperLibrary::SimpleMoveToLocation(GetController(), CurrentDestination);
+	// DrawDebugSphere(GetWorld(), CurrentDestination, 15.0f, 12, FColor::Red, false, 10.0f);
+	// UE_LOG(LogTemp, Log, TEXT("Investigating alert"));
 }
 
 void AHdnEGunship::OnWeaponCoolDown()
@@ -132,7 +137,8 @@ void AHdnEGunship::ResumePatrol()
 		patrolPoint->GetComponentLocation(), patrolPoint->GetScaledBoxExtent());
 
 	CurrentDestination = GetPointOnNavMesh(patrolDestination);
-	UAIBlueprintHelperLibrary::SimpleMoveToLocation(GetController(), patrolDestination);
+	UAIBlueprintHelperLibrary::SimpleMoveToLocation(GetController(), CurrentDestination);
+	// DrawDebugSphere(GetWorld(), patrolDestination, 15.0f, 12, FColor::Green, false, 10.0f);
 	// DrawDebugSphere(GetWorld(), CurrentDestination, 15.0f, 12, FColor::Blue, false, 10.0f);
 }
 
