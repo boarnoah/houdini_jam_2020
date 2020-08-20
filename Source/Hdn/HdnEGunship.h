@@ -77,6 +77,8 @@ protected:
 	void SetNextWaypoint();
 
 	void ResumePatrol();
+
+	FVector GetPointOnNavMesh(FVector Point) const;
 public:
 	UPROPERTY()
 	AHdnPatrol* Patrol;

@@ -7,8 +7,11 @@
 #include "DrawDebugHelpers.h"
 #include "HdnCharacter.h"
 #include "HdnPatrol.h"
+#include "HdnPatrolPoint.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
-#include "Engine/TargetPoint.h"
+#include "Components/BoxComponent.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "NavigationSystem.h"
 #include "Perception/PawnSensingComponent.h"
 // Sets default values
 AHdnEGunship::AHdnEGunship()
@@ -124,9 +127,30 @@ void AHdnEGunship::SetNextWaypoint()
 
 void AHdnEGunship::ResumePatrol()
 {
-	CurrentDestination = Patrol->PatrolPoints[CurrentWaypointIndex]->GetActorLocation();
-	UAIBlueprintHelperLibrary::SimpleMoveToLocation(GetController(), CurrentDestination);
+	UBoxComponent* patrolPoint = Patrol->PatrolPoints[CurrentWaypointIndex]->PatrolBox;
+	const FVector patrolDestination = UKismetMathLibrary::RandomPointInBoundingBox(
+		patrolPoint->GetComponentLocation(), patrolPoint->GetScaledBoxExtent());
+
+	CurrentDestination = GetPointOnNavMesh(patrolDestination);
+	UAIBlueprintHelperLibrary::SimpleMoveToLocation(GetController(), patrolDestination);
+	// DrawDebugSphere(GetWorld(), CurrentDestination, 15.0f, 12, FColor::Blue, false, 10.0f);
 }
+
+FVector AHdnEGunship::GetPointOnNavMesh(FVector point) const
+{
+	FNavLocation location;
+	const FNavAgentProperties* navAgentProperties = &GetNavAgentPropertiesRef();
+	UNavigationSystemV1* navSystem = Cast<UNavigationSystemV1>(GetWorld()->GetNavigationSystem());
+
+	if (navSystem == nullptr)
+	{
+		return point;
+	}
+
+	navSystem->ProjectPointToNavigation(point, location, FVector(50, 50, 1000), navAgentProperties);
+	return location.Location;
+}
+
 
 // Called every frame
 void AHdnEGunship::Tick(float DeltaTime)

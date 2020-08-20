@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "HdnPatrol.generated.h"
 
+class AHdnPatrolPoint;
 class AHdnEScout;
 class AHdnEGunship;
 class UBoxComponent;
@@ -23,7 +24,7 @@ public:
 	bool GetPatrolEnabled()  const { return Enabled; }
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Gameplay")
-	TArray<ATargetPoint*> PatrolPoints;
+	TArray<AHdnPatrolPoint*> PatrolPoints;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
