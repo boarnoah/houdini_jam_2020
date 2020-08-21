@@ -76,7 +76,20 @@ void AHdnEGunship::OnPlayerSeen(APawn* Pawn)
 void AHdnEGunship::OnAlertGracePeriodExpired()
 {
 	InAlertGracePeriod = false;
-	InvestigateAlert();
+
+	const auto player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	const bool hasLoS = PawnSensing->HasLineOfSightTo(player);
+
+	// If player is still there transition straight to combat
+	if (hasLoS)
+	{
+		State = EEnemyState::Combat;
+		GetWorldTimerManager().SetTimer(WeaponCooldownHandle, this, &AHdnEGunship::OnWeaponCoolDown, WeaponCooldown, true, -1);
+		GetWorldTimerManager().SetTimer(CombatCooldownHandle, this, &AHdnEGunship::OnCombatCooldown, CombatCooldown, false, -1);
+	} else
+	{
+		InvestigateAlert();
+	}
 }
 
 void AHdnEGunship::OnAlertExpired()
