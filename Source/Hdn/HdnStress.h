@@ -17,16 +17,15 @@ public:
 	UHdnStress();
 
 	void AddStress(float amount);
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Gameplay")
+    float CurrentStress = 0;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Gameplay")
-	float CurrentStress = 0;
-
 	// Game over when over stressed
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Gameplay")
-	float MaxStress = 0;
+	float MaxStress = 100;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Gameplay")
 	float HysteresisTime = 15.0f;

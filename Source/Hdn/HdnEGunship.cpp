@@ -12,6 +12,7 @@
 #include "Components/BoxComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "NavigationSystem.h"
+#include "Kismet/GameplayStatics.h"
 #include "Perception/PawnSensingComponent.h"
 // Sets default values
 AHdnEGunship::AHdnEGunship()
@@ -106,10 +107,30 @@ void AHdnEGunship::InvestigateAlert()
 
 void AHdnEGunship::OnWeaponCoolDown()
 {
-	if (State == EEnemyState::Combat)
+	if (State != EEnemyState::Combat)
 	{
-		UE_LOG(LogTemp, Log, TEXT("Cooldown finished, firing"));
+		return;
 	}
+
+	const auto player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	const bool hasLoS = PawnSensing->HasLineOfSightTo(player);
+
+	if (hasLoS)
+	{
+		TargetPoint = player->GetActorLocation() + player->GetActorForwardVector() * (player->GetVelocity() * WeaponFireTime);
+	} else
+	{
+		TargetPoint = LastSeenPosition;
+	}
+
+	const FVector distance = TargetPoint - player->GetActorLocation();
+
+	if (distance.Size() <= WeaponDamageRadius)
+	{
+		player->TakeDamage(WeaponDamage, FDamageEvent(), GetController(), this);
+	}
+
+	// DrawDebugSphere(GetWorld(), TargetPoint, WeaponDamageRadius, 12, FColor::Red, false, 10.0f);
 }
 
 void AHdnEGunship::OnCombatCooldown()

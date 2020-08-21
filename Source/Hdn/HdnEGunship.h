@@ -62,6 +62,15 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Gameplay")
 	float CombatCooldown = 10.0f;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Gameplay")
+	float WeaponFireTime = 0.5f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Gameplay")
+	float WeaponDamageRadius = 125.0f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Gameplay")
+	float WeaponDamage = 20.0f;
+	
 	FTimerHandle CombatCooldownHandle;
 	void OnCombatCooldown();
 
@@ -79,6 +88,9 @@ protected:
 	void ResumePatrol();
 
 	FVector GetPointOnNavMesh(FVector Point) const;
+
+	UPROPERTY()
+	FVector TargetPoint;
 public:
 	UPROPERTY()
 	AHdnPatrol* Patrol;

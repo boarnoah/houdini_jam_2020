@@ -32,6 +32,8 @@ void UHdnStress::AddStress(float amount)
 		{
 			CurrentStress += amount;
 		}
+	} else {
+		CurrentStress += amount / 2;
 	}
 }
 

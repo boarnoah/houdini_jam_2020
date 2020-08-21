@@ -112,6 +112,15 @@ void AHdnCharacter::ActivateFeral()
 	Gm->ActivateFeral(this);
 }
 
+float AHdnCharacter::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator,
+	AActor* DamageCauser)
+{
+	const float actualDamage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+	UE_LOG(LogTemp, Log, TEXT("Took %f damage, health: %f"), actualDamage, Stress->CurrentStress);
+	Stress->AddStress(actualDamage);
+	return actualDamage;
+}
+
 void AHdnCharacter::TimerTick()
 {
 	SpectrumAnalyzer->Scan();
